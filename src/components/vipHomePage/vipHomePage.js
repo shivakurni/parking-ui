@@ -11,7 +11,10 @@ class VipHomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userName: localStorage.getItem("userName"),
             formData: {
+                userId: localStorage.getItem("userId"),
+                
                 fromDate: '',
                 toDate: ''
             }
@@ -38,6 +41,9 @@ class VipHomePage extends Component {
                 //     position: toast.POSITION.BOTTOM_CENTER
                 // });
                 swal("Slot Released Successfully ")
+            }).catch((error)=>{
+                console.log(error);
+                swal("Parking does not exist ")
             });
     }
 
@@ -54,12 +60,12 @@ class VipHomePage extends Component {
             <div className="container">
                 <button className="policy-btn" onClick={this.back}>LogOut</button>
                 <div>
-                    <h1 align="left" className="user-title" >Welcome:</h1>
+                    <h1 align="left" className="user-title" >Welcome:  {this.state.userName}</h1>
                 </div>
 
-                <div>
+                {/* <div>
                     <h1 align="left" className="user-title" >Employee Id:</h1>
-                </div>
+                </div> */}
 
                 {/* <div>
                     <h1 align="center" className="slot-title">Please select a Slot</h1>

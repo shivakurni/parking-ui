@@ -1,30 +1,107 @@
 import React, { Component } from 'react';
 import './userHomePage.css'
 import axios from 'axios';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-import { withTranslation } from 'react-i18next';
+import swal from "sweetalert"
+
 
 
 class UserHomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userName: localStorage.getItem("userName"),
             listAvailableSeats: []
         }
     }
 
+    //fetch data on page load
     componentDidMount() {
-        axios.get("mock.json").then((response) => {
-            this.setState({ listAvailableSeats: response.data })           
-            localStorage.setItem("parkingId", response.data.parkingId);
-            localStorage.setItem("parkingSlot", response.data.parkingSlot);
-        }).catch((error) => {           
+        axios.get("http://10.117.189.210:9093/parking/slots").then((response) => {
+            console.log(response.data)
+            this.setState({ listAvailableSeats: response.data })
+        }).catch((error) => {
         });
     }
 
+    //redirect to login page
     back = () => {
-        this.props.history.push(`/`)
+        this.props.history.push(`/`);
     }
+
+    // handleSlotBooking=(e)=>{
+    //     e.preventDefault();
+    //     let data1={
+    //         regId:localStorage.getItem("regId"),
+    //         availableSlotId:localStorage.getItem("availableSlotId")
+    //     }
+    //         axios.post(`http://10.117.189.210:9093/parking/releaseSlot`,data1).then((response)=>{
+    //         console.log(response.data);
+    //         swal(response.data.message);
+    //     }).catch((error)=>{
+    //         console.log(error);        
+    //     });
+    // }
+
+    slotClicked = (item) => {
+        
+        localStorage.setItem("parkingId", item.parkingId);
+        console.log(item.parkingId);
+        localStorage.setItem("parkingSlot", item.parkingSlot);
+        console.log(item.parkingSlot);
+        const userData = this.state.formData;
+
+        
+        
+
+        // var Name = document.getElementsByName(item.name);
+        // var checked = document.getElementById(item.parkingId);
+    
+        // if (checked.checked) {
+        //     alert("sdfsdf")
+        //   for(var i=0; i < Name.length; i++){
+    
+        //       if(!Name[i].checked){
+        //           Name[i].disabled = true;
+        //       }else{
+        //           Name[i].disabled = false;
+        //       }
+        //   } 
+        // }
+        // else {
+        //   for(var i=0; i < Name.length; i++){
+        //     Name[i].disabled = false;
+        //   } 
+        // }    
+
+        // axios.post('http://10.117.189.210:9093/parking/releaseSlot', userData)
+        //     .then(resp => {
+        //         // toast("Request sent!", {
+        //         //     position: toast.POSITION.BOTTOM_CENTER
+        //         // });
+        //         swal("Slot Released Successfully ")
+        //     }).catch((error)=>{
+        //         console.log(error);
+        //         swal("Parking does not exist ")
+        //     });
+    }
+
+
+    book = (e) => {
+        e.preventDefault();
+        let data1={
+            parkingId:localStorage.getItem("parkingId"),
+            userId:localStorage.getItem("userId")            
+        }
+            axios.post(`http://10.117.189.210:9093/parking/booking`,data1).then((response)=>{
+            console.log(response.data);
+            swal(response.data.message);
+        }).catch((error)=>{
+            console.log(error);        
+        });
+
+    }
+
+
 
     render() {
         return (
@@ -32,124 +109,35 @@ class UserHomePage extends Component {
                 <button className="policy-btn" onClick={this.back}>LogOut</button>
                 <div>
                     <div>
-                        <h1 align="left" className="user-title" >Welcome:</h1>
+                        <h1 align="left" className="user-title" >Welcome:   {this.state.userName}</h1>
                     </div>
-
-                    <div>
-                        <h1 align="left" className="user-title" >Employee Id:</h1>
-                    </div>
-
                     <div>
                         <h1 align="center" className="slot-title">Please select a Slot</h1>
                     </div>
-                   
-                    <ol class="cabin fuselage">
-                        <li class="row--1">
-                            <ol class="seats" type="A">
-                                <li class="seat">
-                                    <input type="checkbox" id="1A" />
-                                    <label for="1A">1A</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="1B" />
-                                    <label for="1B">1B</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="1C" />
-                                    <label for="1C">1C</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" disabled id="1D" />
-                                    <label for="1D">Occupied</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="1E" />
-                                    <label for="1E">1E</label>
-                                </li>
-                            </ol>
-                        </li>
 
-                        <li class="row--2">
-                            <ol class="seats" type="A">
-                                <li class="seat">
-                                    <input type="checkbox" id="2A" />
-                                    <label for="2A">2A</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="2B" />
-                                    <label for="2B">2B</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="2C" />
-                                    <label for="2C">2C</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="2D" />
-                                    <label for="2D">2D</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="2E" />
-                                    <label for="2E">2E</label>
-                                </li>
-                            </ol>
-                        </li>
+                    {this.state.listAvailableSeats.map((item, i) => {
+                        return (
+                            <div className="slot-container">
+                                <div class="cabin fuselage" key={i}>
+                                    <div class="row--1">
+                                        <div class="seats" type="A">
+                                            <div class="seat">
+                                                <input type="checkbox" name="progress" id={item.parkingId} onClick={() => this.slotClicked(item)} />
+                                                <label for={item.parkingId}>{item.parkingSlot}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                        )
+                    })}
 
-                        <li class="row--3">
-                            <ol class="seats" type="A">
-                                <li class="seat">
-                                    <input type="checkbox" id="3A" />
-                                    <label for="3A">3A</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="3B" />
-                                    <label for="3B">3B</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="3C" />
-                                    <label for="3C">3C</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" disabled id="3D" />
-                                    <label for="3D">Occupied</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="3E" />
-                                    <label for="3E">3E</label>
-                                </li>
-                            </ol>
-                        </li>
-                        <li class="row--4">
-                            <ol class="seats" type="A">
-                                <li class="seat">
-                                    <input type="checkbox" id="4A" />
-                                    <label for="4A">4A</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="4B" />
-                                    <label for="4B">4B</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="4C" />
-                                    <label for="4C">4C</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="4D" />
-                                    <label for="4D">4D</label>
-                                </li>
-                                <li class="seat">
-                                    <input type="checkbox" id="4E" />
-                                    <label for="4E">4E</label>
-                                </li>
-                            </ol>
-                        </li>
-
-                    </ol>
                     <div>
-                        <button type="button" className="btn btn-info book-btn" onClick={this.book}>Book</button>
-
+                        <button type="button" className="btn btn-info book-btn bttn" onClick={this.book}>Book</button>
                     </div>
                 </div>
+
             </div>
         )
     }

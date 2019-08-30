@@ -62,7 +62,7 @@ class Register extends Component {
         
         const userData = this.state.formData;
         console.log(userData);
-        axios.post('http://10.117.189.82:9093/parking/registration', userData)
+        axios.post('http://10.117.189.210:9093/parking/registration', userData)
        
             .then(resp => {
                 console.log(resp);
@@ -215,6 +215,8 @@ class Register extends Component {
                             </div>
                             <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={this.handleClick}>
                                     Register</button>
+                                    <button className="new-user-btn" onClick={this.back}>New User? Register Here</button>
+
                         </form>
                     </div>
                 </div>

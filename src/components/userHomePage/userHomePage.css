@@ -70,7 +70,7 @@
    }
 
    .fuselage {
-    margin-left: 200px;
+    margin: 10px 41px;
     }
   ol {
     list-style: none;
@@ -153,6 +153,11 @@
     cursor: pointer;
     box-shadow: 0 0 0px 2px #5C6AFF;
   }
+
+  li.label:active{
+    background: green;
+  }
+
   
   @-webkit-keyframes rubberBand {
     0% {
@@ -217,8 +222,7 @@
   .rubberBand {
     -webkit-animation-name: rubberBand;
     animation-name: rubberBand;
-  }
-  
+  }  
 
   .user-title{
       font-size: 20px;
@@ -228,3 +232,11 @@
   .book-btn{
       margin-left: 100px;
   }
+
+  .slot-container{
+    display: inline-flex !important;
+  }
+
+  .bttn{
+    margin: 0;
+  }   

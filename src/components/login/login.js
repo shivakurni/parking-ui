@@ -54,10 +54,13 @@ class Login extends Component {
         }
 
         const { formData } = this.state;
-        axios.post('http://10.117.189.82:9093/parking/login', formData).then((response) => {
+        axios.post('http://10.117.189.210:9093/parking/login', formData).then((response) => {
             console.log(response);
             localStorage.setItem("roleId", response.data.roleId);
             localStorage.setItem("roleType", response.data.roleType);
+
+            localStorage.setItem("userName", response.data.userName);
+            localStorage.setItem("userId", response.data.userId);
             if (response.data.roleType == 'employee') {
                 toast("Logged in!", {
                     position: toast.POSITION.TOP_CENTER
